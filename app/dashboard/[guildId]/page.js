@@ -2,7 +2,7 @@
 
 import { useSession, signIn } from 'next-auth/react';
 import { useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import Link from 'next/link';
 
 const emptyConfig = {
@@ -14,12 +14,25 @@ const emptyConfig = {
   welcomeChannelId: '',
   autoRoleId: '',
   mcStatusChannelId: '',
+  mcHost: '',
+  mcPort: '25565',
+  mcPaper1Name: 'Paper 1',
+  mcPaper1Host: '',
+  mcPaper1Port: '25566',
+  mcPaper2Name: 'Paper 2',
+  mcPaper2Host: '',
+  mcPaper2Port: '25567',
+  mcPaper3Name: 'Paper 3',
+  mcPaper3Host: '',
+  mcPaper3Port: '25568',
+  mcPaper4Name: 'Paper 4',
+  mcPaper4Host: '',
+  mcPaper4Port: '25569',
 };
 
 export default function GuildSettings() {
   const { status } = useSession();
   const params = useParams();
-  const router = useRouter();
   const guildId = params.guildId;
 
   const [textChannels, setTextChannels] = useState([]);
@@ -122,6 +135,29 @@ export default function GuildSettings() {
     );
   }
 
+  function TextInput({ label, value, onChange, placeholder }) {
+    return (
+      <div>
+        <label>{label}</label>
+        <input
+          type="text"
+          value={value || ''}
+          placeholder={placeholder || ''}
+          onChange={(e) => onChange(e.target.value)}
+          style={{
+            width: '100%',
+            background: 'var(--bg)',
+            color: 'var(--text)',
+            border: '1px solid var(--border)',
+            borderRadius: 8,
+            padding: '0.6rem 0.75rem',
+            marginBottom: '1rem',
+          }}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="container">
       <div className="header">
@@ -192,16 +228,16 @@ export default function GuildSettings() {
             onChange={(v) => setConfig({ ...config, autoRoleId: v })}
           />
           <div>
-            <label>Ankündigungs-Rollen (mehrere mit Strg/Cmd)</label>
+            <label>Ankündigungs-Rollen (Strg/Cmd + Klick für mehrere)</label>
             <select
               multiple
-              size={Math.min(6, roles.length || 3)}
+              size={Math.min(8, Math.max(3, roles.length))}
               value={config.announceRoleIds || []}
               onChange={(e) => {
                 const selected = Array.from(e.target.selectedOptions).map((o) => o.value);
                 setConfig({ ...config, announceRoleIds: selected });
               }}
-              style={{ minHeight: '120px' }}
+              style={{ minHeight: '140px' }}
             >
               {roles.map((r) => (
                 <option key={r.id} value={r.id}>
@@ -210,6 +246,88 @@ export default function GuildSettings() {
               ))}
             </select>
           </div>
+        </div>
+      </div>
+
+      <div className="card">
+        <h3 style={{ marginBottom: '1rem' }}>Minecraft Server</h3>
+        <p className="muted" style={{ marginBottom: '1rem' }}>
+          Host/IP und Port für Status-Checks. Leer lassen = nicht anzeigen.
+        </p>
+        <div className="field-grid">
+          <TextInput
+            label="Velocity / Proxy Host"
+            value={config.mcHost}
+            onChange={(v) => setConfig({ ...config, mcHost: v })}
+            placeholder="play.nod3.de"
+          />
+          <TextInput
+            label="Velocity / Proxy Port"
+            value={config.mcPort}
+            onChange={(v) => setConfig({ ...config, mcPort: v })}
+            placeholder="36035"
+          />
+          <TextInput
+            label="Paper 1 Name"
+            value={config.mcPaper1Name}
+            onChange={(v) => setConfig({ ...config, mcPaper1Name: v })}
+            placeholder="Survival"
+          />
+          <TextInput
+            label="Paper 1 Host"
+            value={config.mcPaper1Host}
+            onChange={(v) => setConfig({ ...config, mcPaper1Host: v })}
+          />
+          <TextInput
+            label="Paper 1 Port"
+            value={config.mcPaper1Port}
+            onChange={(v) => setConfig({ ...config, mcPaper1Port: v })}
+          />
+          <TextInput
+            label="Paper 2 Name"
+            value={config.mcPaper2Name}
+            onChange={(v) => setConfig({ ...config, mcPaper2Name: v })}
+          />
+          <TextInput
+            label="Paper 2 Host"
+            value={config.mcPaper2Host}
+            onChange={(v) => setConfig({ ...config, mcPaper2Host: v })}
+          />
+          <TextInput
+            label="Paper 2 Port"
+            value={config.mcPaper2Port}
+            onChange={(v) => setConfig({ ...config, mcPaper2Port: v })}
+          />
+          <TextInput
+            label="Paper 3 Name"
+            value={config.mcPaper3Name}
+            onChange={(v) => setConfig({ ...config, mcPaper3Name: v })}
+          />
+          <TextInput
+            label="Paper 3 Host"
+            value={config.mcPaper3Host}
+            onChange={(v) => setConfig({ ...config, mcPaper3Host: v })}
+          />
+          <TextInput
+            label="Paper 3 Port"
+            value={config.mcPaper3Port}
+            onChange={(v) => setConfig({ ...config, mcPaper3Port: v })}
+          />
+          <TextInput
+            label="Paper 4 Name"
+            value={config.mcPaper4Name}
+            onChange={(v) => setConfig({ ...config, mcPaper4Name: v })}
+          />
+          <TextInput
+            label="Paper 4 Host"
+            value={config.mcPaper4Host}
+            onChange={(v) => setConfig({ ...config, mcPaper4Host: v })}
+          />
+          <TextInput
+            label="Paper 4 Port"
+            value={config.mcPaper4Port}
+            onChange={(v) => setConfig({ ...config, mcPaper4Port: v })}
+          />
         </div>
       </div>
 
