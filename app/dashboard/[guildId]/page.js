@@ -1,7 +1,7 @@
 'use client';
 
 import { useSession, signIn } from 'next-auth/react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback, memo } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 
@@ -29,6 +29,70 @@ const emptyConfig = {
   mcPaper4Host: '',
   mcPaper4Port: '25569',
 };
+
+// Außerhalb der Seite definiert = kein Remount bei jedem Tastendruck
+const TextInput = memo(function TextInput({ label, value, onChange, placeholder, inputMode, fieldKey }) {
+  return (
+    <div>
+      <label htmlFor={fieldKey}>{label}</label>
+      <input
+        id={fieldKey}
+        name={fieldKey}
+        type="text"
+        inputMode={inputMode || 'text'}
+        autoComplete="off"
+        autoCorrect="off"
+        autoCapitalize="none"
+        spellCheck={false}
+        value={value ?? ''}
+        placeholder={placeholder || ''}
+        onChange={(e) => onChange(fieldKey, e.target.value)}
+      />
+    </div>
+  );
+});
+
+const ChannelSelect = memo(function ChannelSelect({ label, value, onChange, channels, fieldKey }) {
+  return (
+    <div>
+      <label htmlFor={fieldKey}>{label}</label>
+      <select
+        id={fieldKey}
+        name={fieldKey}
+        value={value || ''}
+        onChange={(e) => onChange(fieldKey, e.target.value)}
+      >
+        <option value="">— Nicht gesetzt —</option>
+        {channels.map((c) => (
+          <option key={c.id} value={c.id}>
+            #{c.name}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+});
+
+const RoleSelect = memo(function RoleSelect({ label, value, onChange, roles, fieldKey }) {
+  return (
+    <div>
+      <label htmlFor={fieldKey}>{label}</label>
+      <select
+        id={fieldKey}
+        name={fieldKey}
+        value={value || ''}
+        onChange={(e) => onChange(fieldKey, e.target.value)}
+      >
+        <option value="">— Nicht gesetzt —</option>
+        {roles.map((r) => (
+          <option key={r.id} value={r.id}>
+            @{r.name}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+});
 
 export default function GuildSettings() {
   const { status } = useSession();
@@ -65,9 +129,23 @@ export default function GuildSettings() {
       .finally(() => setLoading(false));
   }, [status, guildId]);
 
+  // Stabile Callbacks – verhindern unnötige Remounts
+  const setField = useCallback((key, value) => {
+    setConfig((prev) => ({ ...prev, [key]: value }));
+  }, []);
+
+  const toggleAnnounceRole = useCallback((roleId) => {
+    setConfig((prev) => {
+      const current = prev.announceRoleIds || [];
+      const next = current.includes(roleId)
+        ? current.filter((id) => id !== roleId)
+        : [...current, roleId];
+      return { ...prev, announceRoleIds: next };
+    });
+  }, []);
+
   async function save() {
-    // Tastatur auf Handy schließen
-    if (typeof document !== 'undefined' && document.activeElement) {
+    if (typeof document !== 'undefined' && document.activeElement instanceof HTMLElement) {
       document.activeElement.blur();
     }
 
@@ -92,15 +170,6 @@ export default function GuildSettings() {
     }
   }
 
-  function toggleAnnounceRole(roleId) {
-    const current = config.announceRoleIds || [];
-    if (current.includes(roleId)) {
-      setConfig({ ...config, announceRoleIds: current.filter((id) => id !== roleId) });
-    } else {
-      setConfig({ ...config, announceRoleIds: [...current, roleId] });
-    }
-  }
-
   if (status === 'loading' || loading) {
     return (
       <div className="container">
@@ -115,57 +184,6 @@ export default function GuildSettings() {
         <button className="btn" onClick={() => signIn('discord')}>
           Mit Discord anmelden
         </button>
-      </div>
-    );
-  }
-
-  function ChannelSelect({ label, value, onChange, channels }) {
-    return (
-      <div>
-        <label>{label}</label>
-        <select value={value || ''} onChange={(e) => onChange(e.target.value)}>
-          <option value="">— Nicht gesetzt —</option>
-          {channels.map((c) => (
-            <option key={c.id} value={c.id}>
-              #{c.name}
-            </option>
-          ))}
-        </select>
-      </div>
-    );
-  }
-
-  function RoleSelect({ label, value, onChange }) {
-    return (
-      <div>
-        <label>{label}</label>
-        <select value={value || ''} onChange={(e) => onChange(e.target.value)}>
-          <option value="">— Nicht gesetzt —</option>
-          {roles.map((r) => (
-            <option key={r.id} value={r.id}>
-              @{r.name}
-            </option>
-          ))}
-        </select>
-      </div>
-    );
-  }
-
-  function TextInput({ label, value, onChange, placeholder, inputMode }) {
-    return (
-      <div>
-        <label>{label}</label>
-        <input
-          type="text"
-          inputMode={inputMode || 'text'}
-          autoComplete="off"
-          autoCorrect="off"
-          autoCapitalize="none"
-          spellCheck={false}
-          value={value || ''}
-          placeholder={placeholder || ''}
-          onChange={(e) => onChange(e.target.value)}
-        />
       </div>
     );
   }
@@ -192,32 +210,37 @@ export default function GuildSettings() {
         <div className="field-grid">
           <ChannelSelect
             label="Willkommens-Kanal"
+            fieldKey="welcomeChannelId"
             value={config.welcomeChannelId}
-            onChange={(v) => setConfig({ ...config, welcomeChannelId: v })}
+            onChange={setField}
             channels={textChannels}
           />
           <ChannelSelect
             label="Ticket-Log Kanal"
+            fieldKey="ticketLogChannelId"
             value={config.ticketLogChannelId}
-            onChange={(v) => setConfig({ ...config, ticketLogChannelId: v })}
+            onChange={setField}
             channels={textChannels}
           />
           <ChannelSelect
             label="Ankündigungs-Kanal"
+            fieldKey="announceChannelId"
             value={config.announceChannelId}
-            onChange={(v) => setConfig({ ...config, announceChannelId: v })}
+            onChange={setField}
             channels={textChannels}
           />
           <ChannelSelect
             label="Minecraft Status-Kanal"
+            fieldKey="mcStatusChannelId"
             value={config.mcStatusChannelId}
-            onChange={(v) => setConfig({ ...config, mcStatusChannelId: v })}
+            onChange={setField}
             channels={textChannels}
           />
           <ChannelSelect
             label="Support-Sprachkanal"
+            fieldKey="supportVoiceChannelId"
             value={config.supportVoiceChannelId}
-            onChange={(v) => setConfig({ ...config, supportVoiceChannelId: v })}
+            onChange={setField}
             channels={voiceChannels}
           />
         </div>
@@ -228,17 +251,21 @@ export default function GuildSettings() {
         <div className="field-grid">
           <RoleSelect
             label="Team-Rolle"
+            fieldKey="teamRoleId"
             value={config.teamRoleId}
-            onChange={(v) => setConfig({ ...config, teamRoleId: v })}
+            onChange={setField}
+            roles={roles}
           />
           <RoleSelect
             label="Auto-Role (bei Join)"
+            fieldKey="autoRoleId"
             value={config.autoRoleId}
-            onChange={(v) => setConfig({ ...config, autoRoleId: v })}
+            onChange={setField}
+            roles={roles}
           />
         </div>
 
-        <label>Ankündigungs-Rollen (antippen zum Auswählen)</label>
+        <label>Ankündigungs-Rollen (antippen)</label>
         <div className="checkbox-list">
           {roles.length === 0 ? (
             <p className="muted" style={{ padding: '0.75rem' }}>
@@ -270,87 +297,101 @@ export default function GuildSettings() {
         <div className="field-grid">
           <TextInput
             label="Velocity / Proxy Host"
+            fieldKey="mcHost"
             value={config.mcHost}
-            onChange={(v) => setConfig({ ...config, mcHost: v })}
+            onChange={setField}
             placeholder="play.nod3.de"
           />
           <TextInput
             label="Velocity / Proxy Port"
+            fieldKey="mcPort"
             value={config.mcPort}
-            onChange={(v) => setConfig({ ...config, mcPort: v })}
+            onChange={setField}
             placeholder="36035"
             inputMode="numeric"
           />
           <TextInput
             label="Paper 1 Name"
+            fieldKey="mcPaper1Name"
             value={config.mcPaper1Name}
-            onChange={(v) => setConfig({ ...config, mcPaper1Name: v })}
+            onChange={setField}
             placeholder="Survival"
           />
           <TextInput
             label="Paper 1 Host"
+            fieldKey="mcPaper1Host"
             value={config.mcPaper1Host}
-            onChange={(v) => setConfig({ ...config, mcPaper1Host: v })}
+            onChange={setField}
           />
           <TextInput
             label="Paper 1 Port"
+            fieldKey="mcPaper1Port"
             value={config.mcPaper1Port}
-            onChange={(v) => setConfig({ ...config, mcPaper1Port: v })}
+            onChange={setField}
             inputMode="numeric"
           />
           <TextInput
             label="Paper 2 Name"
+            fieldKey="mcPaper2Name"
             value={config.mcPaper2Name}
-            onChange={(v) => setConfig({ ...config, mcPaper2Name: v })}
+            onChange={setField}
           />
           <TextInput
             label="Paper 2 Host"
+            fieldKey="mcPaper2Host"
             value={config.mcPaper2Host}
-            onChange={(v) => setConfig({ ...config, mcPaper2Host: v })}
+            onChange={setField}
           />
           <TextInput
             label="Paper 2 Port"
+            fieldKey="mcPaper2Port"
             value={config.mcPaper2Port}
-            onChange={(v) => setConfig({ ...config, mcPaper2Port: v })}
+            onChange={setField}
             inputMode="numeric"
           />
           <TextInput
             label="Paper 3 Name"
+            fieldKey="mcPaper3Name"
             value={config.mcPaper3Name}
-            onChange={(v) => setConfig({ ...config, mcPaper3Name: v })}
+            onChange={setField}
           />
           <TextInput
             label="Paper 3 Host"
+            fieldKey="mcPaper3Host"
             value={config.mcPaper3Host}
-            onChange={(v) => setConfig({ ...config, mcPaper3Host: v })}
+            onChange={setField}
           />
           <TextInput
             label="Paper 3 Port"
+            fieldKey="mcPaper3Port"
             value={config.mcPaper3Port}
-            onChange={(v) => setConfig({ ...config, mcPaper3Port: v })}
+            onChange={setField}
             inputMode="numeric"
           />
           <TextInput
             label="Paper 4 Name"
+            fieldKey="mcPaper4Name"
             value={config.mcPaper4Name}
-            onChange={(v) => setConfig({ ...config, mcPaper4Name: v })}
+            onChange={setField}
           />
           <TextInput
             label="Paper 4 Host"
+            fieldKey="mcPaper4Host"
             value={config.mcPaper4Host}
-            onChange={(v) => setConfig({ ...config, mcPaper4Host: v })}
+            onChange={setField}
           />
           <TextInput
             label="Paper 4 Port"
+            fieldKey="mcPaper4Port"
             value={config.mcPaper4Port}
-            onChange={(v) => setConfig({ ...config, mcPaper4Port: v })}
+            onChange={setField}
             inputMode="numeric"
           />
         </div>
       </div>
 
       <div className="sticky-save">
-        <button className="btn" onClick={save} disabled={saving}>
+        <button type="button" className="btn" onClick={save} disabled={saving}>
           {saving ? 'Speichert...' : 'Einstellungen speichern'}
         </button>
       </div>
