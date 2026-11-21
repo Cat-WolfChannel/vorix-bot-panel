@@ -59,13 +59,18 @@ export default function GuildSettings() {
         setTextChannels(ch.text || []);
         setVoiceChannels(ch.voice || []);
         setRoles(ro || []);
-        setConfig({ ...emptyConfig, ...cfg });
+        setConfig({ ...emptyConfig, ...cfg, announceRoleIds: cfg.announceRoleIds || [] });
       })
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
   }, [status, guildId]);
 
   async function save() {
+    // Tastatur auf Handy schließen
+    if (typeof document !== 'undefined' && document.activeElement) {
+      document.activeElement.blur();
+    }
+
     setSaving(true);
     setMessage('');
     setError('');
@@ -78,10 +83,21 @@ export default function GuildSettings() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Speichern fehlgeschlagen');
       setMessage('Gespeichert!');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (err) {
       setError(err.message);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } finally {
       setSaving(false);
+    }
+  }
+
+  function toggleAnnounceRole(roleId) {
+    const current = config.announceRoleIds || [];
+    if (current.includes(roleId)) {
+      setConfig({ ...config, announceRoleIds: current.filter((id) => id !== roleId) });
+    } else {
+      setConfig({ ...config, announceRoleIds: [...current, roleId] });
     }
   }
 
@@ -135,24 +151,20 @@ export default function GuildSettings() {
     );
   }
 
-  function TextInput({ label, value, onChange, placeholder }) {
+  function TextInput({ label, value, onChange, placeholder, inputMode }) {
     return (
       <div>
         <label>{label}</label>
         <input
           type="text"
+          inputMode={inputMode || 'text'}
+          autoComplete="off"
+          autoCorrect="off"
+          autoCapitalize="none"
+          spellCheck={false}
           value={value || ''}
           placeholder={placeholder || ''}
           onChange={(e) => onChange(e.target.value)}
-          style={{
-            width: '100%',
-            background: 'var(--bg)',
-            color: 'var(--text)',
-            border: '1px solid var(--border)',
-            borderRadius: 8,
-            padding: '0.6rem 0.75rem',
-            marginBottom: '1rem',
-          }}
         />
       </div>
     );
@@ -170,16 +182,13 @@ export default function GuildSettings() {
           </div>
           <p className="muted">ID: {guildId}</p>
         </div>
-        <button className="btn" onClick={save} disabled={saving}>
-          {saving ? 'Speichert...' : 'Speichern'}
-        </button>
       </div>
 
       {message && <div className="alert alert-success">{message}</div>}
       {error && <div className="alert alert-error">{error}</div>}
 
       <div className="card">
-        <h3 style={{ marginBottom: '1rem' }}>Kanäle</h3>
+        <h3>Kanäle</h3>
         <div className="field-grid">
           <ChannelSelect
             label="Willkommens-Kanal"
@@ -194,7 +203,7 @@ export default function GuildSettings() {
             channels={textChannels}
           />
           <ChannelSelect
-            label="Ankündigungs-Kanal (Standard)"
+            label="Ankündigungs-Kanal"
             value={config.announceChannelId}
             onChange={(v) => setConfig({ ...config, announceChannelId: v })}
             channels={textChannels}
@@ -215,7 +224,7 @@ export default function GuildSettings() {
       </div>
 
       <div className="card">
-        <h3 style={{ marginBottom: '1rem' }}>Rollen</h3>
+        <h3>Rollen</h3>
         <div className="field-grid">
           <RoleSelect
             label="Team-Rolle"
@@ -227,32 +236,36 @@ export default function GuildSettings() {
             value={config.autoRoleId}
             onChange={(v) => setConfig({ ...config, autoRoleId: v })}
           />
-          <div>
-            <label>Ankündigungs-Rollen (Strg/Cmd + Klick für mehrere)</label>
-            <select
-              multiple
-              size={Math.min(8, Math.max(3, roles.length))}
-              value={config.announceRoleIds || []}
-              onChange={(e) => {
-                const selected = Array.from(e.target.selectedOptions).map((o) => o.value);
-                setConfig({ ...config, announceRoleIds: selected });
-              }}
-              style={{ minHeight: '140px' }}
-            >
-              {roles.map((r) => (
-                <option key={r.id} value={r.id}>
-                  @{r.name}
-                </option>
-              ))}
-            </select>
-          </div>
+        </div>
+
+        <label>Ankündigungs-Rollen (antippen zum Auswählen)</label>
+        <div className="checkbox-list">
+          {roles.length === 0 ? (
+            <p className="muted" style={{ padding: '0.75rem' }}>
+              Keine Rollen gefunden
+            </p>
+          ) : (
+            roles.map((r) => {
+              const checked = (config.announceRoleIds || []).includes(r.id);
+              return (
+                <label key={r.id} className="checkbox-item">
+                  <input
+                    type="checkbox"
+                    checked={checked}
+                    onChange={() => toggleAnnounceRole(r.id)}
+                  />
+                  <span>@{r.name}</span>
+                </label>
+              );
+            })
+          )}
         </div>
       </div>
 
       <div className="card">
-        <h3 style={{ marginBottom: '1rem' }}>Minecraft Server</h3>
+        <h3>Minecraft Server</h3>
         <p className="muted" style={{ marginBottom: '1rem' }}>
-          Host/IP und Port für Status-Checks. Leer lassen = nicht anzeigen.
+          Host/IP und Port. Leer = nicht anzeigen.
         </p>
         <div className="field-grid">
           <TextInput
@@ -266,6 +279,7 @@ export default function GuildSettings() {
             value={config.mcPort}
             onChange={(v) => setConfig({ ...config, mcPort: v })}
             placeholder="36035"
+            inputMode="numeric"
           />
           <TextInput
             label="Paper 1 Name"
@@ -282,6 +296,7 @@ export default function GuildSettings() {
             label="Paper 1 Port"
             value={config.mcPaper1Port}
             onChange={(v) => setConfig({ ...config, mcPaper1Port: v })}
+            inputMode="numeric"
           />
           <TextInput
             label="Paper 2 Name"
@@ -297,6 +312,7 @@ export default function GuildSettings() {
             label="Paper 2 Port"
             value={config.mcPaper2Port}
             onChange={(v) => setConfig({ ...config, mcPaper2Port: v })}
+            inputMode="numeric"
           />
           <TextInput
             label="Paper 3 Name"
@@ -312,6 +328,7 @@ export default function GuildSettings() {
             label="Paper 3 Port"
             value={config.mcPaper3Port}
             onChange={(v) => setConfig({ ...config, mcPaper3Port: v })}
+            inputMode="numeric"
           />
           <TextInput
             label="Paper 4 Name"
@@ -327,13 +344,16 @@ export default function GuildSettings() {
             label="Paper 4 Port"
             value={config.mcPaper4Port}
             onChange={(v) => setConfig({ ...config, mcPaper4Port: v })}
+            inputMode="numeric"
           />
         </div>
       </div>
 
-      <button className="btn" onClick={save} disabled={saving}>
-        {saving ? 'Speichert...' : 'Einstellungen speichern'}
-      </button>
+      <div className="sticky-save">
+        <button className="btn" onClick={save} disabled={saving}>
+          {saving ? 'Speichert...' : 'Einstellungen speichern'}
+        </button>
+      </div>
     </div>
   );
 }
