@@ -5,6 +5,8 @@ import GuildConfig from '@/lib/models/GuildConfig';
 
 const empty = {
   guildId: '',
+  serverDisplayName: '',
+  teamName: '',
   teamRoleId: '',
   announceChannelId: '',
   announceRoleIds: [],
@@ -58,6 +60,8 @@ export async function POST(req, { params }) {
       { guildId: params.id },
       {
         guildId: params.id,
+        serverDisplayName: body.serverDisplayName || '',
+        teamName: body.teamName || '',
         teamRoleId: body.teamRoleId || '',
         announceChannelId: body.announceChannelId || '',
         announceRoleIds: body.announceRoleIds || [],
