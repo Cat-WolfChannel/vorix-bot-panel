@@ -210,9 +210,9 @@ client.on('guildMemberAdd', async (member) => {
 
   const welcomeEmbed = new EmbedBuilder()
     .setColor(0x9B30FF)
-    .setTitle(`Willkommen auf ${server}!`)
+    .setTitle(`💜 Willkommen auf ${server}!`)
     .setDescription(`Hallo ${member}!\n\n**Herzlich Willkommen auf ${server}!**`)
-    .addFields({ name: 'Mitgliedsnummer', value: `Du bist unser **${member.guild.memberCount}.** Mitglied!` })
+    .addFields({ name: '👤 Mitgliedsnummer', value: `Du bist unser **${member.guild.memberCount}.** Mitglied!` })
     .setThumbnail(member.user.displayAvatarURL({ size: 256 }))
     .setFooter({ text: server })
     .setTimestamp();
@@ -226,12 +226,12 @@ client.on('guildMemberAdd', async (member) => {
 
   const dmEmbed = new EmbedBuilder()
     .setColor(0x9B30FF)
-    .setTitle(`Willkommen bei ${server}!`)
+    .setTitle(`💜 Willkommen bei ${server}!`)
     .setDescription(
       `Hallo ${member.user.username}!\n\n**Herzlich Willkommen zum ${server}!**\n\n` +
       `Wir hoffen, dir wird es bei uns sehr gefallen!\n\n` +
-      `Bitte lies dir vorher noch die **Regeln** durch und markiere sie mit einem gruenen Haken.\n\n` +
-      `Danke und hab viel Spass auf ${server}!\n\nMit freundlichen Gruessen\n**${team}**`
+      `Bitte lies dir vorher noch die **Regeln** durch und markiere sie mit einem grünen Haken ✅.\n\n` +
+      `Danke und hab viel Spaß auf ${server}!\n\nMit freundlichen Grüßen\n**${team}**`
     )
     .setFooter({ text: server })
     .setTimestamp();
@@ -275,7 +275,7 @@ client.on('voiceStateUpdate', async (oldState, newState) => {
       embeds: [
         new EmbedBuilder()
           .setColor(0x57F287)
-          .setTitle('Support benoetigt')
+          .setTitle('🔊 Support benötigt')
           .setDescription(`${member} **braucht Hilfe**`)
           .addFields(
             { name: 'User', value: member.user.tag, inline: true },
@@ -293,7 +293,7 @@ client.on('voiceStateUpdate', async (oldState, newState) => {
       embeds: [
         new EmbedBuilder()
           .setColor(0xED4245)
-          .setTitle('Support beendet')
+          .setTitle('🔇 Support beendet')
           .setDescription(`${member} **braucht keine Hilfe mehr**`)
           .setFooter({ text: team })
           .setTimestamp()
@@ -328,8 +328,8 @@ client.on('messageCreate', async (message) => {
         embeds: [
           new EmbedBuilder()
             .setColor(0x9B30FF)
-            .setTitle('Spieler melden')
-            .setDescription('Danke.\n\n**Was hat diese Person gemacht?**\nBitte so genau wie moeglich (Was, Wann, Wo).')
+            .setTitle('🚨 Spieler melden')
+            .setDescription('Danke.\n\n**Was hat diese Person gemacht?**\nBitte so genau wie möglich (Was, Wann, Wo).')
             .setFooter({ text: 'Schritt 2 von 3' })
         ]
       });
@@ -344,8 +344,8 @@ client.on('messageCreate', async (message) => {
         embeds: [
           new EmbedBuilder()
             .setColor(0x9B30FF)
-            .setTitle('Spieler melden')
-            .setDescription('Hast du **Beweise** (Screenshots, Fotos, Videos, Chat-Logs)?\n\nJa -> hier hochladen oder Link schicken\nNein -> schreib **Nein**')
+            .setTitle('🚨 Spieler melden')
+            .setDescription('Hast du **Beweise** (Screenshots, Fotos, Videos, Chat-Logs)?\n\n• Ja → hier hochladen oder Link schicken\n• Nein → schreib **Nein**')
             .setFooter({ text: 'Schritt 3 von 3' })
         ]
       });
@@ -369,7 +369,7 @@ client.on('messageCreate', async (message) => {
         embeds: [
           new EmbedBuilder()
             .setColor(0xED4245)
-            .setTitle(`Meldung vollstaendig – ${team} uebernimmt`)
+            .setTitle(`🚨 Meldung vollständig – ${team} übernimmt`)
             .setDescription('Danke, alle Infos sind erfasst.\nEin Teammitglied prueft die Meldung.\n\n' + summary.slice(0, 3500))
             .setFooter({ text: team })
             .setTimestamp()
@@ -383,7 +383,7 @@ client.on('messageCreate', async (message) => {
             embeds: [
               new EmbedBuilder()
                 .setColor(0xED4245)
-                .setTitle('Spieler-Meldung bereit')
+                .setTitle('🚨 Spieler-Meldung bereit')
                 .setDescription(`${message.channel}\n\n${summary}`.slice(0, 4000))
                 .setFooter({ text: team })
                 .setTimestamp()
@@ -418,7 +418,7 @@ client.on('messageCreate', async (message) => {
         embeds: [
           new EmbedBuilder()
             .setColor(0x57F287)
-            .setTitle(`Bewerbung – ${team} uebernimmt`)
+            .setTitle(`📝 Bewerbung – ${team} übernimmt`)
             .setDescription(
               `Danke! Deine Bewerbung als **${state.data.role}** bei **${server}** ist erfasst.\n\n` +
               `Ein Mitglied von **${team}** schaut sie sich an und meldet sich.`
@@ -435,7 +435,7 @@ client.on('messageCreate', async (message) => {
             embeds: [
               new EmbedBuilder()
                 .setColor(0x5865F2)
-                .setTitle('Neue Team-Bewerbung')
+                .setTitle('📝 Neue Team-Bewerbung')
                 .addFields(
                   { name: 'User', value: `${message.author}`, inline: true },
                   { name: 'Als', value: state.data.role.slice(0, 200), inline: true },
@@ -496,7 +496,7 @@ Sonst kurz helfen. Max 5-8 Saetze. Bei Unsicherheit Team erwaehnen.`;
           embeds: [
             new EmbedBuilder()
               .setColor(0x9B30FF)
-              .setTitle(`${server} Support-KI`)
+              .setTitle(`🤖 ${server} Support-KI`)
               .setDescription(answer.slice(0, 4000))
               .setFooter({ text: `${team} KI` })
               .setTimestamp()
@@ -504,13 +504,13 @@ Sonst kurz helfen. Max 5-8 Saetze. Bei Unsicherheit Team erwaehnen.`;
         });
       } else {
         await message.channel.send(
-          `Die KI ist gerade ueberlastet oder langsam.\n` +
+          `⚠️ Die KI ist gerade überlastet oder langsam.\n` +
           (config?.teamRoleId ? `<@&${config.teamRoleId}> bitte uebernehmen.` : 'Bitte warte auf das Team.')
         );
       }
     } catch (err) {
       console.log('KI Ticket:', err.message);
-      await message.channel.send('KI-Fehler. Bitte Team fragen.').catch(() => {});
+      await message.channel.send('⚠️ KI-Fehler. Bitte Team fragen.').catch(() => {});
     } finally {
       if (typingLoop) clearInterval(typingLoop);
     }
@@ -527,13 +527,13 @@ Sonst kurz helfen. Max 5-8 Saetze. Bei Unsicherheit Team erwaehnen.`;
   if (command === 'help') {
     const embed = new EmbedBuilder()
       .setColor(0x9B30FF)
-      .setTitle(`${server} Bot – Hilfe`)
+      .setTitle(`📖 ${server} Bot – Hilfe`)
       .addFields(
-        { name: 'Ticket', value: '`!ticket` – Ticket-Panel (Team)' },
-        { name: 'Ankuendigung', value: '`!announce [ #kanal ] Nachricht`' },
-        { name: 'Status', value: '`!status`' },
-        { name: 'IP', value: '`!ip`' },
-        { name: 'Hilfe', value: '`!help`' }
+        { name: '🎫 Ticket', value: '`!ticket` – Ticket-Panel (Team)' },
+        { name: '📢 Ankündigung', value: '`!announce [ #kanal ] Nachricht`' },
+        { name: '🟢 Status', value: '`!status`' },
+        { name: '🌐 IP', value: '`!ip`' },
+        { name: 'ℹ️ Hilfe', value: '`!help`' }
       )
       .setFooter({ text: server })
       .setTimestamp();
@@ -547,12 +547,12 @@ Sonst kurz helfen. Max 5-8 Saetze. Bei Unsicherheit Team erwaehnen.`;
 
   if (command === 'ticket') {
     if (!config?.teamRoleId || !message.member.roles.cache.has(config.teamRoleId)) {
-      return message.reply('Nur das Team darf das Ticket-Panel senden.');
+      return message.reply('❌ Nur das Team darf das Ticket-Panel senden.');
     }
     const embed = new EmbedBuilder()
       .setColor(0x9B30FF)
-      .setTitle(`${server} Ticket System`)
-      .setDescription('Waehle eine Kategorie, um ein privates Ticket zu erstellen.')
+      .setTitle(`🎫 ${server} Ticket System`)
+      .setDescription('Wähle eine Kategorie, um ein privates Ticket zu erstellen.')
       .setFooter({ text: server })
       .setTimestamp();
     const files = [];
@@ -563,7 +563,7 @@ Sonst kurz helfen. Max 5-8 Saetze. Bei Unsicherheit Team erwaehnen.`;
     const row = new ActionRowBuilder().addComponents(
       new StringSelectMenuBuilder()
         .setCustomId('ticket_select')
-        .setPlaceholder('Kategorie auswaehlen...')
+        .setPlaceholder('📂 Kategorie auswählen...')
         .addOptions(
           { label: 'Support', value: 'support', emoji: '🛠️', description: 'Allgemeine Hilfe' },
           { label: 'Team Bewerbung', value: 'team_bewerbung', emoji: '📝', description: 'Bewerbung fuers Team' },
@@ -579,11 +579,11 @@ Sonst kurz helfen. Max 5-8 Saetze. Bei Unsicherheit Team erwaehnen.`;
   }
 
   if (command === 'announce') {
-    if (!config) return message.reply('Keine Panel-Einstellungen.');
+    if (!config) return message.reply('❌ Keine Panel-Einstellungen.');
     const hasPermission = message.member.roles.cache.some((r) =>
       (config.announceRoleIds || []).includes(r.id)
     );
-    if (!hasPermission) return message.reply('Keine Berechtigung.');
+    if (!hasPermission) return message.reply('❌ Keine Berechtigung.');
     if (!args.length) return message.reply('`!announce Nachricht` oder `!announce #kanal Nachricht`');
 
     let targetChannel = null;
@@ -598,12 +598,12 @@ Sonst kurz helfen. Max 5-8 Saetze. Bei Unsicherheit Team erwaehnen.`;
       targetChannel = message.guild.channels.cache.get(config.announceChannelId);
       text = args.join(' ');
     }
-    if (!text) return message.reply('Nachricht fehlt.');
+    if (!text) return message.reply('❌ Nachricht fehlt.');
     if (!targetChannel) return message.reply('Kanal nicht gefunden.');
 
     const embed = new EmbedBuilder()
       .setColor(0x9B30FF)
-      .setTitle(`${server} Ankuendigung`)
+      .setTitle(`📢 ${server} Ankündigung`)
       .setDescription(text)
       .setFooter({ text: `${team} · ${message.author.tag}`, iconURL: message.author.displayAvatarURL() })
       .setTimestamp();
@@ -617,13 +617,13 @@ Sonst kurz helfen. Max 5-8 Saetze. Bei Unsicherheit Team erwaehnen.`;
       message.react('✅').catch(() => {});
       if (message.deletable) message.delete().catch(() => {});
     } catch {
-      message.reply('Fehler beim Senden.');
+      message.reply('❌ Fehler beim Senden.');
     }
   }
 
   if (command === 'status' || command === 'mcstatus') {
-    if (!config) return message.reply('Keine Panel-Einstellungen.');
-    const loading = await message.reply('Pruefe Status...');
+    if (!config) return message.reply('❌ Keine Panel-Einstellungen.');
+    const loading = await message.reply('🔄 Prüfe Status...');
     const statusData = await getAllServerStatus(config);
     const built = buildStatusEmbed(statusData, config, server);
     await loading.edit({ content: null, embeds: [built.embed], components: built.components });
@@ -635,7 +635,7 @@ Sonst kurz helfen. Max 5-8 Saetze. Bei Unsicherheit Team erwaehnen.`;
       : 'play.nod3.de:36035';
     const embed = new EmbedBuilder()
       .setColor(0x9B30FF)
-      .setTitle(`${server} – Server IP`)
+      .setTitle(`🌐 ${server} – Server IP`)
       .addFields({ name: 'IP', value: '```' + ip + '```' })
       .setFooter({ text: server })
       .setTimestamp();
@@ -654,7 +654,7 @@ client.on('interactionCreate', async (interaction) => {
   const { server, team } = getBrand(config, interaction.guild);
 
   if (interaction.isStringSelectMenu() && interaction.customId === 'ticket_select') {
-    if (!config) return interaction.reply({ content: 'Keine Config.', ephemeral: true });
+    if (!config) return interaction.reply({ content: '❌ Keine Config.', ephemeral: true });
 
     const key = interaction.values[0];
     const kategorieName = KATEGORIEN[key] || 'Ticket';
@@ -710,7 +710,7 @@ client.on('interactionCreate', async (interaction) => {
 
     const openEmbed = new EmbedBuilder()
       .setColor(0x9B30FF)
-      .setTitle(`${kategorieName} Ticket`)
+      .setTitle(`🎫 ${kategorieName} Ticket`)
       .setDescription(`Hallo ${interaction.user}!\n\nDu hast ein **${kategorieName}**-Ticket auf **${server}** erstellt.\n${hint}`)
       .setFooter({ text: team })
       .setTimestamp();
@@ -723,9 +723,9 @@ client.on('interactionCreate', async (interaction) => {
 
     const buttons = new ActionRowBuilder().addComponents(
       new ButtonBuilder().setCustomId('claim_ticket').setLabel('Claimen').setStyle(ButtonStyle.Success).setEmoji('✋'),
-      new ButtonBuilder().setCustomId('add_user').setLabel('User hinzufuegen').setStyle(ButtonStyle.Primary).setEmoji('➕'),
+      new ButtonBuilder().setCustomId('add_user').setLabel('User hinzufügen').setStyle(ButtonStyle.Primary).setEmoji('➕'),
       new ButtonBuilder().setCustomId('ai_help').setLabel('KI Hilfe').setStyle(ButtonStyle.Secondary).setEmoji('🤖'),
-      new ButtonBuilder().setCustomId('close_ticket').setLabel('Schliessen').setStyle(ButtonStyle.Danger).setEmoji('🔒')
+      new ButtonBuilder().setCustomId('close_ticket').setLabel('Schließen').setStyle(ButtonStyle.Danger).setEmoji('🔒')
     );
 
     await channel.send({
@@ -742,7 +742,7 @@ client.on('interactionCreate', async (interaction) => {
           embeds: [
             new EmbedBuilder()
               .setColor(0x57F287)
-              .setTitle('Neues Ticket')
+              .setTitle('🎫 Neues Ticket')
               .addFields(
                 { name: 'Von', value: `${interaction.user}`, inline: true },
                 { name: 'Kategorie', value: kategorieName, inline: true },
@@ -763,8 +763,8 @@ client.on('interactionCreate', async (interaction) => {
           embeds: [
             new EmbedBuilder()
               .setColor(0x9B30FF)
-              .setTitle('Spieler melden')
-              .setDescription('Wen moechtest du melden?\n\nBitte antworte **genau in diesem Format:**\n```\nMinecraft-Name: \nDiscord-Name: \n```')
+              .setTitle('🚨 Spieler melden')
+              .setDescription('Wen möchtest du melden?\n\nBitte antworte **genau in diesem Format:**\n```\nMinecraft-Name: \nDiscord-Name: \n```')
               .setFooter({ text: 'Schritt 1 von 3' })
           ]
         });
@@ -777,9 +777,9 @@ client.on('interactionCreate', async (interaction) => {
           embeds: [
             new EmbedBuilder()
               .setColor(0x9B30FF)
-              .setTitle(`${team} – Bewerbung`)
-              .setDescription(`Willkommen bei der Bewerbung fuer **${server}**!\n\n**Als was moechtest du dich bewerben?**\n(z. B. Moderator, Builder, Helper, Developer)`)
-              .setFooter({ text: 'Schritt 1 – danach uebernimmt das Team' })
+              .setTitle(`📝 ${team} – Bewerbung`)
+              .setDescription(`Willkommen bei der Bewerbung für **${server}**!\n\n**Als was möchtest du dich bewerben?**\n(z. B. Moderator, Builder, Helper, Developer)`)
+              .setFooter({ text: 'Schritt 1 – danach übernimmt das Team' })
           ]
         });
       }, 1200);
@@ -799,7 +799,7 @@ Nenne den Server- und Teamnamen natuerlich.`,
             embeds: [
               new EmbedBuilder()
                 .setColor(0x9B30FF)
-                .setTitle(`${server} Support-KI`)
+                .setTitle(`🤖 ${server} Support-KI`)
                 .setDescription(
                   (intro || `Hallo! Du bist im **${kategorieName}**-Ticket auf **${server}**.\nBitte beschreibe kurz dein Anliegen. ${team} hilft dir.`)
                     .slice(0, 4000)
@@ -813,26 +813,26 @@ Nenne den Server- und Teamnamen natuerlich.`,
       }, 1500);
     }
 
-    await interaction.reply({ content: `Ticket erstellt: ${channel}`, ephemeral: true });
+    await interaction.reply({ content: `✅ Ticket erstellt: ${channel}`, ephemeral: true });
   }
 
   if (interaction.isButton() && interaction.customId === 'claim_ticket') {
     if (config?.teamRoleId && !interaction.member.roles.cache.has(config.teamRoleId)) {
-      return interaction.reply({ content: 'Nur Team.', ephemeral: true });
+      return interaction.reply({ content: '❌ Nur Team.', ephemeral: true });
     }
     if (interaction.channel.topic?.includes('|claimed:')) {
-      return interaction.reply({ content: 'Schon geclaimed.', ephemeral: true });
+      return interaction.reply({ content: '❌ Schon geclaimed.', ephemeral: true });
     }
     await interaction.channel.setTopic(`${interaction.channel.topic}|claimed:${interaction.user.id}`);
     await interaction.channel.send({
-      embeds: [new EmbedBuilder().setColor(0x57F287).setDescription(`Geclaimed von ${interaction.user}`)]
+      embeds: [new EmbedBuilder().setColor(0x57F287).setDescription(`✋ Geclaimed von ${interaction.user}`)]
     });
-    await interaction.reply({ content: 'Geclaimed!', ephemeral: true });
+    await interaction.reply({ content: '✅ Geclaimed!', ephemeral: true });
   }
 
   if (interaction.isButton() && interaction.customId === 'add_user') {
     if (config?.teamRoleId && !interaction.member.roles.cache.has(config.teamRoleId)) {
-      return interaction.reply({ content: 'Nur Team.', ephemeral: true });
+      return interaction.reply({ content: '❌ Nur Team.', ephemeral: true });
     }
     const row = new ActionRowBuilder().addComponents(
       new UserSelectMenuBuilder().setCustomId('select_user_to_add').setPlaceholder('User...').setMinValues(1).setMaxValues(1)
@@ -845,8 +845,8 @@ Nenne den Server- und Teamnamen natuerlich.`,
     await interaction.channel.permissionOverwrites.edit(user.id, {
       ViewChannel: true, SendMessages: true, ReadMessageHistory: true, AttachFiles: true
     });
-    await interaction.channel.send(`${user} wurde von ${interaction.user} hinzugefuegt.`);
-    await interaction.update({ content: `${user} hinzugefuegt.`, components: [] });
+    await interaction.channel.send(`➕ ${user} wurde von ${interaction.user} hinzugefügt.`);
+    await interaction.update({ content: `✅ ${user} hinzugefügt.`, components: [] });
   }
 
   if (interaction.isButton() && interaction.customId === 'ai_help') {
@@ -863,7 +863,7 @@ Nenne den Server- und Teamnamen natuerlich.`,
         .slice(-1500);
       if (!userLines.trim()) {
         clearInterval(typingLoop);
-        return interaction.editReply('Erst Anliegen schreiben, dann KI Hilfe.');
+        return interaction.editReply('❌ Erst Anliegen schreiben, dann KI Hilfe.');
       }
       await new Promise((r) => setTimeout(r, 1500));
       const kat = interaction.channel.name.split('-')[1] || 'Support';
@@ -874,7 +874,7 @@ Nenne den Server- und Teamnamen natuerlich.`,
       clearInterval(typingLoop);
       if (!answer) {
         return interaction.editReply(
-          `KI nicht erreichbar. ${config?.teamRoleId ? `<@&${config.teamRoleId}>` : team} bitte helfen.`
+          `⚠️ KI nicht erreichbar. ${config?.teamRoleId ? `<@&${config.teamRoleId}>` : team} bitte helfen.`
         );
       }
       const lower = answer.toLowerCase();
@@ -884,7 +884,7 @@ Nenne den Server- und Teamnamen natuerlich.`,
         embeds: [
           new EmbedBuilder()
             .setColor(0x9B30FF)
-            .setTitle(`${server} KI Hilfe`)
+            .setTitle(`🤖 ${server} KI Hilfe`)
             .setDescription(answer.slice(0, 4000))
             .setFooter({ text: team })
             .setTimestamp()
@@ -893,7 +893,7 @@ Nenne den Server- und Teamnamen natuerlich.`,
     } catch (err) {
       clearInterval(typingLoop);
       console.log('ai_help:', err.message);
-      await interaction.editReply('Fehler bei der KI.');
+      await interaction.editReply('❌ Fehler bei der KI.');
     }
   }
 
@@ -905,7 +905,7 @@ Nenne den Server- und Teamnamen natuerlich.`,
           embeds: [
             new EmbedBuilder()
               .setColor(0xED4245)
-              .setTitle('Ticket geschlossen')
+              .setTitle('🔒 Ticket geschlossen')
               .addFields(
                 { name: 'Von', value: `${interaction.user}`, inline: true },
                 { name: 'Channel', value: interaction.channel.name, inline: true }
@@ -918,7 +918,7 @@ Nenne den Server- und Teamnamen natuerlich.`,
     }
     reportFlow.delete(interaction.channel.id);
     applyFlow.delete(interaction.channel.id);
-    await interaction.reply('Ticket wird in 5 Sekunden geschlossen...');
+    await interaction.reply('🔒 Ticket wird in 5 Sekunden geschlossen...');
     setTimeout(() => interaction.channel.delete().catch(() => {}), 5000);
   }
 
@@ -959,41 +959,41 @@ function buildStatusEmbed(statusData, config, serverName) {
   const name = serverName || 'Server';
   const embed = new EmbedBuilder()
     .setColor(velocity.online ? 0x57F287 : 0xED4245)
-    .setTitle(velocity.online ? `${name} – Online` : `${name} – Offline`)
+    .setTitle(velocity.online ? `🟢 ${name} – Online` : `🔴 ${name} – Offline`)
     .addFields({
-      name: 'Velocity Proxy',
+      name: '🌐 Velocity Proxy',
       value: velocity.online
-        ? `Online\nSpieler: **${velocity.players}**\nVersion: ${velocity.version}`
-        : 'Offline'
+        ? `🟢 Online\nSpieler: **${velocity.players}**\nVersion: ${velocity.version}`
+        : '🔴 Offline'
     })
     .setFooter({ text: `${name} · Update alle 5 Min` })
     .setTimestamp();
 
   if (config?.mcPaper1Host) {
     embed.addFields({
-      name: config.mcPaper1Name || 'Paper 1',
-      value: paper1.online ? `Online – ${paper1.players}` : 'Offline',
+      name: `📜 ${config.mcPaper1Name || 'Paper 1'}`,
+      value: paper1.online ? `🟢 Online – ${paper1.players}` : '🔴 Offline',
       inline: true
     });
   }
   if (config?.mcPaper2Host) {
     embed.addFields({
-      name: config.mcPaper2Name || 'Paper 2',
-      value: paper2.online ? `Online – ${paper2.players}` : 'Offline',
+      name: `📜 ${config.mcPaper2Name || 'Paper 2'}`,
+      value: paper2.online ? `🟢 Online – ${paper2.players}` : '🔴 Offline',
       inline: true
     });
   }
   if (config?.mcPaper3Host) {
     embed.addFields({
-      name: config.mcPaper3Name || 'Paper 3',
-      value: paper3.online ? `Online – ${paper3.players}` : 'Offline',
+      name: `📜 ${config.mcPaper3Name || 'Paper 3'}`,
+      value: paper3.online ? `🟢 Online – ${paper3.players}` : '🔴 Offline',
       inline: true
     });
   }
   if (config?.mcPaper4Host) {
     embed.addFields({
-      name: config.mcPaper4Name || 'Paper 4',
-      value: paper4.online ? `Online – ${paper4.players}` : 'Offline',
+      name: `📜 ${config.mcPaper4Name || 'Paper 4'}`,
+      value: paper4.online ? `🟢 Online – ${paper4.players}` : '🔴 Offline',
       inline: true
     });
   }
@@ -1011,10 +1011,10 @@ async function sendMinecraftStatus(channel, config) {
   const server = config.serverDisplayName || 'Server';
 
   if (lastStatus === false && velocity.online) {
-    await channel.send({ embeds: [new EmbedBuilder().setColor(0x57F287).setTitle(`${server} ist wieder online!`).setTimestamp()] });
+    await channel.send({ embeds: [new EmbedBuilder().setColor(0x57F287).setTitle(`🟢 ${server} ist wieder online!`).setTimestamp()] });
   }
   if (lastStatus === true && !velocity.online) {
-    await channel.send({ embeds: [new EmbedBuilder().setColor(0xED4245).setTitle(`${server} ist offline!`).setTimestamp()] });
+    await channel.send({ embeds: [new EmbedBuilder().setColor(0xED4245).setTitle(`🔴 ${server} ist offline!`).setTimestamp()] });
   }
   lastStatus = velocity.online;
 
